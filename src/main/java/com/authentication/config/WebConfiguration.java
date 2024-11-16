@@ -29,11 +29,7 @@ public class WebConfiguration {
 
         http.oauth2Login(withDefaults());
 
-
-
-
 //                .formLogin(formLogin -> formLogin.loginPage("/login"));
-
         return http.build();
     }
 }

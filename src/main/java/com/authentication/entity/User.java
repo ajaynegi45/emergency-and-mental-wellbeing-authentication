@@ -32,6 +32,9 @@ public class User {
     @Column(name = "profile_image", length = 255)
     private String profileImage;
 
+    @Column(name = "role", nullable = false)
+    private String role; // values: "ADMIN", "USER", "MODERATOR"
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -41,19 +44,6 @@ public class User {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
-    public User(Long userId, LocalDateTime lastLogin, LocalDateTime updatedAt, LocalDateTime createdAt, String profileImage, String password, String email, String name) {
-        this.userId = userId;
-        this.lastLogin = lastLogin;
-        this.updatedAt = updatedAt;
-        this.createdAt = createdAt;
-        this.profileImage = profileImage;
-        this.password = password;
-        this.email = email;
-        this.name = name;
-    }
-
-    public User() {
-    }
 
     @PrePersist
     protected void onCreate() {
@@ -64,6 +54,22 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+
+    public User() {
+    }
+
+    public User(Long userId, String name, String email, String password, String profileImage, String role, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime lastLogin) {
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.profileImage = profileImage;
+        this.role = role;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.lastLogin = lastLogin;
     }
 
     public Long getUserId() {
@@ -82,14 +88,6 @@ public class User {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -98,12 +96,28 @@ public class User {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getProfileImage() {
         return profileImage;
     }
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -138,6 +152,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", profileImage='" + profileImage + '\'' +
+                ", role='" + role + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", lastLogin=" + lastLogin +

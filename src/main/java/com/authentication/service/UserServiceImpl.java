@@ -1,6 +1,5 @@
 package com.authentication.service;
 
-
 import com.authentication.dto.UserLoginRequest;
 import com.authentication.dto.UserRegistrationRequest;
 import com.authentication.dto.UserResponse;
@@ -8,13 +7,8 @@ import com.authentication.entity.User;
 import com.authentication.exception.UserAlreadyExistsException;
 import com.authentication.exception.UserNotFoundException;
 import com.authentication.repository.UserRepository;
-
-
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -41,6 +35,8 @@ public class UserServiceImpl implements UserService {
 
         return toUserResponse(savedUser);
     }
+
+
 
     @Override
     public UserResponse loginUser(UserLoginRequest request) {

@@ -1,0 +1,80 @@
+# --- Server Error Configurations ---
+server:
+  error:
+    include-binding-errors: never
+    include-message: never
+    include-stacktrace: never
+    include-exception: false
+    whitelabel:
+      enabled: false
+    path: /error
+  port: 8080  # Standard port for production
+
+
+# --- Database Configurations ---
+spring:
+  datasource:
+    url: ${DATABASE_URL}  # Use environment variable for the database URL
+    username: ${DATABASE_USERNAME}  # Environment variable for database username
+    password: ${DATABASE_PASSWORD}  # Environment variable for database password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Validate schema, do not modify in production
+    properties:
+      hibernate:
+        format_sql: false  # Disable formatted SQL logs in production
+    show-sql: false  # Disable SQL query logging for production
+
+
+spring.datasource:
+  hikari:
+    maximum-pool-size: 10
+    minimum-idle: 5
+    idle-timeout: 30000
+    max-lifetime: 1800000
+    connection-timeout: 20000
+spring.datasource.hikari:
+  leak-detection-threshold: 2000  # Log slow queries
+
+
+# --- Security Configurations ---
+  security:
+    user:
+      name: ${ADMIN_USERNAME}  # Use environment variable for admin username
+      password: ${ADMIN_PASSWORD}  # Use environment variable for admin password
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}  # Environment variable for Google client ID
+            client-secret: ${GOOGLE_CLIENT_SECRET}  # Environment variable for Google client secret
+            scope: email, profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_SECRET_KEY}
+            scope: user, repo
+            redirect-uri: "{baseUrl}/login/oauth2/code/github"
+
+
+# --- Logging Configurations ---
+logging:
+  file:
+    name: logs/application-prod.log  # Save logs to a file
+  level:
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+
+# --- Actuator Monitoring ---
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"  # Limit exposed endpoints in production
+  endpoint:
+    health:
+      show-details: never  # Do not show health details in production

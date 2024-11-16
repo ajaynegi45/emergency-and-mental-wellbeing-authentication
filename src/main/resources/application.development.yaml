@@ -1,0 +1,102 @@
+# --- Server Error Configurations ---
+server:
+  error:
+    include-binding-errors: always
+    include-message: always
+    include-stacktrace: never
+    include-exception: true
+    whitelabel: # Custom Error Pages Configuration
+      enabled: false  # Disable the default error page
+    path: /error  # Custom error handling endpoint
+  port: 8080  # Server port configuration
+
+
+# --- Database Configurations ---
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/emergency&mentalwellbeingauthentication
+    username: root
+    password: 8920611534
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update  # Auto-update schema
+    properties:
+      hibernate:
+        format_sql: true  # Format SQL logs for better readability
+        use_sql_comments: true  # Add comments to SQL queries
+    show-sql: true  # Enable SQL query logging
+  sql:
+    init:
+      mode: always  # Always initialize SQL scripts on startup (useful for dev environments)
+
+
+# --- Security Configurations ---
+  security:
+    user:
+      name: admin  # Admin credentials for testing
+      password: admin123
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ADD_YOUR_CLIENT_ID
+            client-secret: ADD_YOUR_SECRET_KEY
+            scope: email, profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+          github:
+            client-id: ADD_YOUR_GITHUB_CLIENT_ID
+            client-secret: ADD_YOUR_GITHUB_SECRET_KEY
+            scope: user, repo
+            redirect-uri: "{baseUrl}/login/oauth2/code/github"
+
+
+# --- DevTools ---
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+
+# --- Logging Configurations ---
+logging:
+  file:
+    name: logs/application-dev.log  # Save logs to a file
+  level:
+    root: INFO  # Root logging level
+    com:
+      example: DEBUG  # Example for custom package logging
+    org:
+      springframework:
+        security: TRACE  # Trace logs for Spring Security
+        web: DEBUG  # Debug logs for web layer
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n" # Customize log format for console output
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" # Customize log format for file output
+
+
+# --- Error Detection and Actuator Monitoring ---
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # Enable all Actuator endpoints for debugging (limit in production)
+  endpoint:
+    health:
+      show-details: always  # Show health details (useful for detailed error detection)
+  health:
+    mysql:
+      enabled: true  # Include MySQL health check in Actuator
+    diskspace:
+      threshold: 10MB  # Disk space threshold for health checks
+
+
+# --- Additional Properties for Building a Robust Application ---
+application:
+  banner:
+    location: classpath:banner.txt  # Custom banner for application startup
+  cache:
+    type: caffeine  # Example of caching type
+  startup:
+    timing: true  # Log application startup time

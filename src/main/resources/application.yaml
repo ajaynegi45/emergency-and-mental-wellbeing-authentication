@@ -1,0 +1,6 @@
+# --- Profiles for Environment Management ---
+spring:
+  application:
+    name: Emergency and Mental Wellbeing Authentication  # Application name
+  profiles:
+    active: ${ENV:dev}  # Active profile for environments (e.g., dev, test, prod)

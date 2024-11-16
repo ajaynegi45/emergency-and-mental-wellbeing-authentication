@@ -14,7 +14,7 @@ server:
 # --- Database Configurations ---
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/libraryman
+    url: jdbc:mysql://localhost:3306/emergency&mentalwellbeingauthentication
     username: root
     password: 8920611534
     driver-class-name: com.mysql.cj.jdbc.Driver

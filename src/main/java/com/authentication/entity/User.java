@@ -32,7 +32,7 @@ public class User {
     @Column(name = "profile_image", length = 255)
     private String profileImage;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     private String role; // values: "ADMIN", "USER", "MODERATOR"
 
     @Column(name = "created_at", nullable = false, updatable = false)

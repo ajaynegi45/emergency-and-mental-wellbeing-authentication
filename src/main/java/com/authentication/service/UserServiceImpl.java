@@ -4,10 +4,14 @@ import com.authentication.config.PasswordEncoder;
 import com.authentication.dto.UserLoginRequest;
 import com.authentication.dto.UserRegistrationRequest;
 import com.authentication.dto.UserResponse;
+import com.authentication.entity.Role;
 import com.authentication.entity.User;
 import com.authentication.exception.UserAlreadyExistsException;
 import com.authentication.exception.UserNotFoundException;
 import com.authentication.repository.UserRepository;
+
+import java.util.Date;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +35,10 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
+        user.setRole(Role.USER.name());
         user.setPassword(encoded_password);
-
-        User savedUser = userRepository.save(user);
-        return toUserResponse(savedUser);
+        userRepository.save(user);
+        return toUserResponse(user);
     }
 
 
@@ -50,7 +54,8 @@ public class UserServiceImpl implements UserService {
 
         user.setLastLogin(java.time.LocalDateTime.now());
         userRepository.save(user);
-        return toUserResponse(user);
+        UserResponse userResp=toUserResponse(user);
+        return userResp;
     }
 
     private UserResponse toUserResponse(User user) {

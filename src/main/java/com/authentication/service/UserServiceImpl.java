@@ -9,9 +9,6 @@ import com.authentication.entity.User;
 import com.authentication.exception.UserAlreadyExistsException;
 import com.authentication.exception.UserNotFoundException;
 import com.authentication.repository.UserRepository;
-
-import java.util.Date;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

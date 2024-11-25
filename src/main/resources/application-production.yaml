@@ -1,3 +1,22 @@
+
+
+# --- Database Configurations ---
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/emergency_mentalwellbeingauthentication  # MongoDB URI
+      database: emergency_mentalwellbeingauthentication
+
+      # Additional MongoDB connection configurations (if needed):
+      # authentication-database: admin
+      # username: your_username
+      # password: your_password
+
+    # MongoDB Specific Properties (Optional)
+#    max-wait-time: 2000  # Maximum time to wait for a MongoDB connection
+#    connections-per-host: 100  # Max number of connections per host
+#    min-connections-per-host: 10  # Minimum connections per host
+
 # --- Server Error Configurations ---
 server:
   error:
@@ -9,33 +28,6 @@ server:
       enabled: false
     path: /error
   port: 8080  # Standard port for production
-
-
-# --- Database Configurations ---
-spring:
-  datasource:
-    url: ${DATABASE_URL}  # Use environment variable for the database URL
-    username: ${DATABASE_USERNAME}  # Environment variable for database username
-    password: ${DATABASE_PASSWORD}  # Environment variable for database password
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: validate  # Validate schema, do not modify in production
-    properties:
-      hibernate:
-        format_sql: false  # Disable formatted SQL logs in production
-    show-sql: false  # Disable SQL query logging for production
-
-
-spring.datasource:
-  hikari:
-    maximum-pool-size: 10
-    minimum-idle: 5
-    idle-timeout: 30000
-    max-lifetime: 1800000
-    connection-timeout: 20000
-spring.datasource.hikari:
-  leak-detection-threshold: 2000  # Log slow queries
 
 
 # --- Security Configurations ---

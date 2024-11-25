@@ -1,0 +1,275 @@
+@Configuration
+public class PasswordEncoder {
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+@Configuration
+@EnableWebSecurity(debug = true)
+public class WebConfiguration {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
+                        (authorizeRequests) ->
+                                authorizeRequests
+                                        .requestMatchers("/").permitAll()
+                                        .requestMatchers("/api/auth/register").permitAll()
+                                        .requestMatchers("/api/auth/login").permitAll()
+                                        .anyRequest().authenticated()
+                ).formLogin(withDefaults());
+        http.oauth2Login(withDefaults());
+        return http.build();
+    }
+}
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+    private final UserService userService;
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
+    @PostMapping("/register")
+    public ResponseEntity<UserResponse> register(@RequestBody UserRegistrationRequest request) {
+        UserResponse response = userService.registerUser(request);
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest request) {
+        UserResponse response = userService.loginUser(request);
+        return ResponseEntity.ok(response);
+    }
+}
+
+DTO File
+public class UserLoginRequest {
+    private String email;
+    private String password;
+    }
+
+public class UserRegistrationRequest {
+        @NotBlank
+        @Size(min = 3, max = 50)
+        private String name;
+
+        @NotBlank
+        @Email
+        private String email;
+
+        @NotBlank
+        @Size(min = 8, max = 20)
+        private String password;
+
+        public UserRegistrationRequest() {
+        }
+
+        public UserRegistrationRequest(String name, String email, String password) {
+            this.name = name;
+            this.email = email;
+            this.password = password;
+}
+
+@Document(collection = "users")
+public class User {
+
+    @Id
+    private String userId;
+    private String name;
+    private String email;
+    private String password;
+    private String profileImage;
+    private String role;
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime lastLogin;
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+   public User() {
+    }}
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<String> handleUserAlreadyExists(UserAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFound(UserNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+}
+public class UserAlreadyExistsException extends RuntimeException {
+    public UserAlreadyExistsException(String message) {
+        super(message);
+    }
+}
+public class UserNotFoundException extends RuntimeException {
+    public UserNotFoundException(String message) {
+        super(message);
+    }
+}
+
+@Repository
+public interface UserRepository extends MongoRepository<User, String> {
+    Optional<User> findByEmail(String email);
+    boolean existsByEmail(String email);
+}
+
+public interface UserService {
+    UserResponse registerUser(UserRegistrationRequest request);
+    UserResponse loginUser(UserLoginRequest request);
+}
+
+@Service
+@Transactional
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public UserResponse registerUser(UserRegistrationRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new UserAlreadyExistsException("Email is already registered.");
+        }
+        String encoded_password = passwordEncoder.bCryptPasswordEncoder().encode(request.getPassword());
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setRole(Role.USER.name());
+        user.setPassword(encoded_password);
+        userRepository.save(user);
+        return toUserResponse(user);
+    }
+
+    @Override
+    public UserResponse loginUser(UserLoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("Invalid email."));
+        if (!(passwordEncoder.bCryptPasswordEncoder().matches(request.getPassword(), user.getPassword()))){
+            throw new UserNotFoundException("Invalid password.");
+        }
+        user.setLastLogin(java.time.LocalDateTime.now());
+        userRepository.save(user);
+        UserResponse userResp=toUserResponse(user);
+        return userResp;
+    }
+    private UserResponse toUserResponse(User user) {
+        UserResponse response = new UserResponse();
+        response.setUserId(user.getUserId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        return response;
+    }
+}
+
+@SpringBootApplication
+public class AuthenticationApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(AuthenticationApplication.class, args);
+	}
+
+}
+
+# --- Server Error Configurations ---
+server:
+  error:
+    include-binding-errors: always
+    include-message: always
+    include-stacktrace: never
+    include-exception: true
+    whitelabel:
+      enabled: false
+    path: /error
+  port: 8080
+
+
+# --- Database Configurations ---
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/emergency_mentalwellbeingauthentication  # MongoDB URI
+      database: emergency_mentalwellbeingauthentication
+
+# --- Security Configurations ---
+  security:
+    user:
+      name: admin
+      password: admin123
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ADD_YOUR_CLIENT_ID
+            client-secret: ADD_YOUR_SECRET_KEY
+            scope: email, profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+          github:
+            client-id: ADD_YOUR_GITHUB_CLIENT_ID
+            client-secret: ADD_YOUR_GITHUB_SECRET_KEY
+            scope: user, repo
+            redirect-uri: "{baseUrl}/login/oauth2/code/github"
+
+
+# --- DevTools ---
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+
+# --- Logging Configurations ---
+logging:
+  file:
+    name: logs/application-dev.log
+  level:
+    root: INFO
+    com:
+      example: DEBUG
+    org:
+      springframework:
+        security: TRACE
+        web: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n" # Customize log format for console output
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" # Customize log format for file output
+
+
+# --- Error Detection and Actuator Monitoring ---
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    mysql:
+      enabled: true
+    diskspace:
+      threshold: 10MB
+
+# --- Additional Properties for Building a Robust Application ---
+application:
+  banner:
+    location: classpath:banner.txt
+  cache:
+    type: caffeine
+  startup:
+    timing: true

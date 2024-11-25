@@ -4,9 +4,6 @@ import com.authentication.dto.UserLoginRequest;
 import com.authentication.dto.UserRegistrationRequest;
 import com.authentication.dto.UserResponse;
 import com.authentication.service.UserService;
-
-import jakarta.annotation.security.PermitAll;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

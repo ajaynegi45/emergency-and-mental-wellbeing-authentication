@@ -1,6 +1,5 @@
 package com.authentication.dto;
 
-
 public class UserResponse {
     private Long userId;
     private String name;

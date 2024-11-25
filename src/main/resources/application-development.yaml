@@ -13,22 +13,20 @@ server:
 
 # --- Database Configurations ---
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/emergency&mentalwellbeingauthentication
-    username: root
-    password: 8920611534
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update  # Auto-update schema
-    properties:
-      hibernate:
-        format_sql: true  # Format SQL logs for better readability
-        use_sql_comments: true  # Add comments to SQL queries
-    show-sql: true  # Enable SQL query logging
-  sql:
-    init:
-      mode: always  # Always initialize SQL scripts on startup (useful for dev environments)
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/emergency_mentalwellbeingauthentication  # MongoDB URI
+      database: emergency_mentalwellbeingauthentication
+
+      # Additional MongoDB connection configurations (if needed):
+      # authentication-database: admin
+      # username: your_username
+      # password: your_password
+
+    # MongoDB Specific Properties (Optional)
+#    max-wait-time: 2000  # Maximum time to wait for a MongoDB connection
+#    connections-per-host: 100  # Max number of connections per host
+#    min-connections-per-host: 10  # Minimum connections per host
 
 
 # --- Security Configurations ---

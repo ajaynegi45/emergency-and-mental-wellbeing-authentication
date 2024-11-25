@@ -8,17 +8,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
+@Document(collection = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+    private String userId;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -60,7 +58,7 @@ public class User {
     public User() {
     }
 
-    public User(Long userId, String name, String email, String password, String profileImage, String role, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime lastLogin) {
+    public User(String userId, String name, String email, String password, String profileImage, String role, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime lastLogin) {
         this.userId = userId;
         this.name = name;
         this.email = email;
@@ -72,11 +70,11 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

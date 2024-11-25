@@ -1,24 +1,24 @@
 package com.authentication.dto;
 
 public class UserResponse {
-    private Long userId;
+    private String userId;
     private String name;
     private String email;
 
     public UserResponse() {
     }
 
-    public UserResponse(Long userId, String name, String email) {
+    public UserResponse(String userId, String name, String email) {
         this.userId = userId;
         this.name = name;
         this.email = email;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

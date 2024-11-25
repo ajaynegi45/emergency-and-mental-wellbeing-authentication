@@ -21,15 +21,13 @@ public class WebConfiguration {
                 .authorizeHttpRequests(
                         (authorizeRequests) ->
                                 authorizeRequests
-                                        .requestMatchers("/").permitAll()
+//                                        .requestMatchers("/").permitAll()
                                         .requestMatchers("/api/auth/register").permitAll()
                                         .requestMatchers("/api/auth/login").permitAll()
                                         .anyRequest().authenticated()
                 ).formLogin(withDefaults());
 
-        http.oauth2Login(withDefaults());
-
-//                .formLogin(formLogin -> formLogin.loginPage("/login"));
+//        http.oauth2Login(withDefaults());
         return http.build();
     }
 }

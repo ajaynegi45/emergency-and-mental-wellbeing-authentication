@@ -1,3 +1,12 @@
+# --- Database Configurations ---
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/emergency_mentalwellbeingauthentication  # MongoDB URI
+      database: emergency_mentalwellbeingauthentication
+      auto-index-creation: true
+
+
 # --- Server Error Configurations ---
 server:
   error:
@@ -9,44 +18,6 @@ server:
       enabled: false  # Disable the default error page
     path: /error  # Custom error handling endpoint
   port: 8080  # Server port configuration
-
-
-# --- Database Configurations ---
-spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/emergency_mentalwellbeingauthentication  # MongoDB URI
-      database: emergency_mentalwellbeingauthentication
-
-      # Additional MongoDB connection configurations (if needed):
-      # authentication-database: admin
-      # username: your_username
-      # password: your_password
-
-    # MongoDB Specific Properties (Optional)
-#    max-wait-time: 2000  # Maximum time to wait for a MongoDB connection
-#    connections-per-host: 100  # Max number of connections per host
-#    min-connections-per-host: 10  # Minimum connections per host
-
-
-# --- Security Configurations ---
-  security:
-    user:
-      name: admin  # Admin credentials for testing
-      password: admin123
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ADD_YOUR_CLIENT_ID
-            client-secret: ADD_YOUR_SECRET_KEY
-            scope: email, profile
-            redirect-uri: "{baseUrl}/login/oauth2/code/google"
-          github:
-            client-id: ADD_YOUR_GITHUB_CLIENT_ID
-            client-secret: ADD_YOUR_GITHUB_SECRET_KEY
-            scope: user, repo
-            redirect-uri: "{baseUrl}/login/oauth2/code/github"
 
 
 # --- DevTools ---

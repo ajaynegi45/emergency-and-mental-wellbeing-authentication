@@ -10,8 +10,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<String> handleUserAlreadyExists(UserAlreadyExistsException ex) {
+//        log.error("User already exists: {}", ex.getMessage());  // Add logging here
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFound(UserNotFoundException ex) {

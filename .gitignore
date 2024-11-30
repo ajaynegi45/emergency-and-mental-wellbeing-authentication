@@ -37,3 +37,6 @@ src/main/resources/application-dev.yaml
 
 logs
 logs/application.log
+
+src/main/java/com/authentication/config/Check.txt
+src/main/java/com/authentication/config/file.txt

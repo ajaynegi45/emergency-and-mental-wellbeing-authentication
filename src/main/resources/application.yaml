@@ -3,4 +3,4 @@ spring:
   application:
     name: Emergency and Mental Wellbeing Authentication  # Application name
   profiles:
-    active: ${ENV:development}  # Active profile for environments (e.g., development, production)
+    active: ${ENV:production}  # Active profile for environments (e.g., development, production) convert this to properties

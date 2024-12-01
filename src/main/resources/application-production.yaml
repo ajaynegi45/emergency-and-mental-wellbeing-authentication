@@ -1,11 +1,9 @@
-
-
 # --- Database Configurations ---
 spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/emergency_mentalwellbeingauthentication  # MongoDB URI
-      database: emergency_mentalwellbeingauthentication
+ data:
+  mongodb:
+   uri: mongodb://localhost:27017/emergency_mentalwellbeingauthentication  # MongoDB URI
+   database: emergency_mentalwellbeingauthentication
 
       # Additional MongoDB connection configurations (if needed):
       # authentication-database: admin
@@ -18,36 +16,36 @@ spring:
 #    min-connections-per-host: 10  # Minimum connections per host
 
 # --- Server Error Configurations ---
-server:
+ server:
   error:
-    include-binding-errors: never
-    include-message: never
-    include-stacktrace: never
-    include-exception: false
-    whitelabel:
-      enabled: false
+   include-binding-errors: never
+   include-message: never
+   include-stacktrace: never
+   include-exception: false
+   whitelabel:
+    enabled: false
     path: /error
-  port: 8080  # Standard port for production
+ port: 8080  # Standard port for production
 
 
 # --- Security Configurations ---
-  security:
-    user:
-      name: ${ADMIN_USERNAME}  # Use environment variable for admin username
-      password: ${ADMIN_PASSWORD}  # Use environment variable for admin password
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}  # Environment variable for Google client ID
-            client-secret: ${GOOGLE_CLIENT_SECRET}  # Environment variable for Google client secret
-            scope: email, profile
-            redirect-uri: "{baseUrl}/login/oauth2/code/google"
-          github:
-            client-id: ${GITHUB_CLIENT_ID}
-            client-secret: ${GITHUB_SECRET_KEY}
-            scope: user, repo
-            redirect-uri: "{baseUrl}/login/oauth2/code/github"
+ security:
+  user:
+   name: ${ADMIN_USERNAME}  # Use environment variable for admin username
+   password: ${ADMIN_PASSWORD}  # Use environment variable for admin password
+  oauth2:
+   client:
+    registration:
+     google:
+      client-id: ${GOOGLE_CLIENT_ID}
+      client-secret: ${GOOGLE_CLIENT_SECRET}
+      scope: email, profile
+      redirect-uri: "{baseUrl}/login/oauth2/code/google"
+     github:
+      client-id: ${GITHUB_CLIENT_ID}
+      client-secret: ${GITHUB_SECRET_KEY}
+      scope: user, repo
+      redirect-uri: "{baseUrl}/login/oauth2/code/github"
 
 
 # --- Logging Configurations ---

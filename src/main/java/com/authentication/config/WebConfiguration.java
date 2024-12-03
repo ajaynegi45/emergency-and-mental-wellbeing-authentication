@@ -12,8 +12,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity(debug = true)
-// Do not use (debug=true) in a production system! as this contain sensitive information.
-//@EnableMethodSecurity(prePostEnabled = true)
 public class WebConfiguration {
 
     @Bean

@@ -2,7 +2,6 @@ package com.authentication.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,13 +20,11 @@ public class WebConfiguration {
                 .authorizeHttpRequests(
                         (authorizeRequests) ->
                                 authorizeRequests
-//                                        .requestMatchers("/").permitAll()
                                         .requestMatchers("/api/auth/register").permitAll()
                                         .requestMatchers("/api/auth/login").permitAll()
+                                        .requestMatchers("/api/auth/update-profile").permitAll()
                                         .anyRequest().authenticated()
                 ).formLogin(withDefaults());
-
-//        http.oauth2Login(withDefaults());
         return http.build();
     }
 }

@@ -4,6 +4,7 @@ import com.authentication.config.PasswordEncoder;
 import com.authentication.dto.UserLoginRequest;
 import com.authentication.dto.UserRegistrationRequest;
 import com.authentication.dto.UserResponse;
+import com.authentication.dto.UserUpdateRequest;
 import com.authentication.entity.Role;
 import com.authentication.entity.User;
 import com.authentication.exception.UserAlreadyExistsException;
@@ -11,6 +12,8 @@ import com.authentication.exception.UserNotFoundException;
 import com.authentication.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -62,5 +65,26 @@ public class UserServiceImpl implements UserService {
         response.setEmail(user.getEmail());
         return response;
     }
+
+
+
+    public UserResponse updateUserProfile(UserUpdateRequest request) {
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (request.getName() != null) user.setName(request.getName());
+        if (request.getEmail() != null) user.setEmail(request.getEmail());
+        if (request.getPassword() != null) {
+            String encodedPassword = passwordEncoder.bCryptPasswordEncoder().encode(request.getPassword());
+            user.setPassword(encodedPassword);
+        }
+        if (request.getProfileImage() != null) user.setProfileImage(request.getProfileImage());
+
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+
+        return toUserResponse(user);
+    }
+
 }
 
